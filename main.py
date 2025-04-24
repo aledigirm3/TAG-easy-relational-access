@@ -1,6 +1,5 @@
 import pandas as pd
 import os
-import time
 
 
 def create_embeddings(db_name: str) -> list[str]:
@@ -22,9 +21,6 @@ def create_embeddings(db_name: str) -> list[str]:
             for i, (column, value) in enumerate(zip(embedding_column, embedding_value)):
                 new_row += f"{column}: {value}, "
             
-            embeddings.append(f"{name}: {new_row[:len(new_row)-2]}")
+            embeddings.append(f"{name}, {new_row[:len(new_row)-2]}")
 
     return embeddings
-
-
-create_embeddings("student_club")
