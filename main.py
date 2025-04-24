@@ -11,7 +11,6 @@ def create_embeddings(db_name: str) -> list[str]:
         name = table_name.split(".")[0]
         df = pd.read_csv(os.path.join(path, table_name))
         columns = df.columns.to_list()
-        length = len(columns)
         
         for row in df.itertuples():
             embedding_value = [value for value in row[2:]]
