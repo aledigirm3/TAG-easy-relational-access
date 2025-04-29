@@ -23,3 +23,34 @@ def create_embeddings(db_name: str) -> list[str]:
             embeddings.append(f"{name}, {new_row[:len(new_row)-2]}")
 
     return embeddings
+
+def format_embeddings(embeddings: list[str]) -> dict:
+    result = {}
+    for row in embeddings:
+        row = row.split(", ")
+        db_name = row.pop(0)
+        row = ",".join(row).split(",")
+
+        attributes = []
+        values = []
+
+        for element in row:
+            index = element.find(": ")
+            attribute = element[:index]
+            value = element[index+1:]
+            
+            attributes.append(attribute)
+            values.append(value)
+
+        if db_name in result:
+            db = result[db_name]
+            db["rows"] = db["rows"] + [values]
+            result[db_name] = db
+        else:
+            db = dict(
+                attributes = ",".join(attributes),
+                rows = [",".join(values)]
+            )
+            result[db_name] = db
+
+    return result
