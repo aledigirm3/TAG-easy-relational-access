@@ -10,6 +10,9 @@ class Embedder:
         self.model = self.model.to(self.device)
         self.embedding_size = self.model.get_sentence_embedding_dimension()
 
+    def get_embedding_dimension(self) -> int:
+        return self.embedding_size
+
 
     def get_sentence_embedding(self, sentence: str) -> np.ndarray:
         return self.model.encode(sentence, normalize_embeddings=True)
