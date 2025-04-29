@@ -26,6 +26,8 @@ def create_embeddings(db_name: str) -> list[str]:
 
 def format_embeddings(embeddings: list[str]) -> dict:
     result = {}
+
+    rows = []
     for row in embeddings:
         row = row.split(", ")
         db_name = row.pop(0)
@@ -37,20 +39,24 @@ def format_embeddings(embeddings: list[str]) -> dict:
         for element in row:
             index = element.find(": ")
             attribute = element[:index]
-            value = element[index+1:]
+            value = element[index+2:]
             
             attributes.append(attribute)
             values.append(value)
 
-        if db_name in result:
-            db = result[db_name]
-            db["rows"] = db["rows"] + [values]
-            result[db_name] = db
-        else:
+        rows.append((db_name, attributes, values))
+    
+    for (db_name, attributes, values) in rows:
+        if db_name not in result:
             db = dict(
                 attributes = ",".join(attributes),
                 rows = [",".join(values)]
             )
             result[db_name] = db
+        else:
+            db = result[db_name]
+            db["rows"].append(",".join(values))
+
+            result[db_name] = db 
 
     return result
