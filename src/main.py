@@ -3,7 +3,7 @@ import os
 
 
 def create_embeddings(db_name: str) -> list[str]:
-    embeddings = []
+    pre_embeddings_rows = []
     path = os.path.join("databases", db_name)
     tables_names = sorted(os.listdir(path))
     
@@ -20,15 +20,26 @@ def create_embeddings(db_name: str) -> list[str]:
             for i, (column, value) in enumerate(zip(embedding_column, embedding_value)):
                 new_row += f"{column}: {value}, "
             
-            embeddings.append(f"{name}, {new_row[:len(new_row)-2]}")
+            pre_embeddings_rows.append(f"{name}, {new_row[:len(new_row)-2]}")
 
-    return embeddings
+    return pre_embeddings_rows
 
-def format_embeddings(embeddings: list[str]) -> dict:
+def format_embeddings(pre_embeddings_rows: list[str]) -> dict:
+    """
+    Function to query the GROQ API with a list of messages.
+    
+    Args:
+        messages (list): The list of messages to send to the model.
+        model (str): The model to use for the completion.
+        temperature (float): The temperature to use for the completion.
+        
+    Returns:
+        str: The completion from the model.
+    """
     result = {}
 
     rows = []
-    for row in embeddings:
+    for row in pre_embeddings_rows:
         row = row.split(", ")
         db_name = row.pop(0)
         row = ",".join(row).split(",")
