@@ -3,10 +3,10 @@ from embedder import Embedder
 import numpy as np
 
 class MilvusDB:
-    def __init__(self, collection_name="semantic_search", emb_dim=384, host="localhost", port="19530"):
+    def __init__(self, collection_name="semantic_search", host="localhost", port="19530"):
         self.collection_name = collection_name
-        self.emb_dim = emb_dim
         self.model = Embedder()
+        self.emb_dim = self.model.get_embedding_dimension()
 
         connections.connect("default", host=host, port=port)
         self._setup_collection()
@@ -17,7 +17,7 @@ class MilvusDB:
         else:
             fields = [
                 FieldSchema(name="id", dtype=DataType.INT64, is_primary=True, auto_id=True),
-                FieldSchema(name="text", dtype=DataType.VARCHAR, max_length=512),
+                FieldSchema(name="text", dtype=DataType.VARCHAR, max_length=2048),
                 FieldSchema(name="embedding", dtype=DataType.FLOAT_VECTOR, dim=self.emb_dim)
             ]
             schema = CollectionSchema(fields)
@@ -39,7 +39,7 @@ class MilvusDB:
         embeddings = self.model.get_sentence_embedding(texts).tolist()
         self.collection.insert([texts, embeddings])
 
-    def search(self, query: str, top_k=5, threshold=0.7):
+    def search(self, query: str, threshold=0.7, top_k=10000):
         self._ensure_loaded()
         embedding = self.model.get_sentence_embedding(query).tolist()
         search_params = {"metric_type": "COSINE", 
