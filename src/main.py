@@ -26,15 +26,19 @@ def create_embeddings(db_name: str) -> list[str]:
 
 def format_embeddings(pre_embeddings_rows: list[str]) -> dict:
     """
-    Function to query the GROQ API with a list of messages.
+    Function that read the `pre_embeddings_rows` and return a dict that organize each db
     
     Args:
-        messages (list): The list of messages to send to the model.
-        model (str): The model to use for the completion.
-        temperature (float): The temperature to use for the completion.
+        pre_embeddings_rows (list): list where each element is formatted like this: `db_name`, `column1: value1`, `column2: value2`, .... 
         
     Returns:
-        str: The completion from the model.
+        dict: dictionary in this format:
+            {
+                "db_name": {
+                    "attributes": "",
+                    "rows" : []
+                }
+            }
     """
     result = {}
 
