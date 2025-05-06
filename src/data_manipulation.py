@@ -4,6 +4,10 @@ from milvusDB import MilvusDB
 
 
 def create_embeddings():
+    """
+    Extracts all rows from every table in every database, generates embeddings for the row data,
+    and stores the resulting embeddings in a vector database (Milvus).
+    """
 
     milvusdb = MilvusDB()
     pre_embeddings_rows = []
