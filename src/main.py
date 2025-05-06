@@ -1,28 +1,38 @@
 import pandas as pd
 import os
+from milvusDB import MilvusDB
+import sys
 
 
-def create_embeddings(db_name: str) -> list[str]:
+def create_embeddings():
+
+    milvusdb = MilvusDB()
     pre_embeddings_rows = []
-    path = os.path.join("databases", db_name)
-    tables_names = sorted(os.listdir(path))
-    
-    for table_name in tables_names:
-        name = table_name.split(".")[0]
-        df = pd.read_csv(os.path.join(path, table_name))
-        columns = df.columns.to_list()
+
+    databases = sorted([
+    d for d in os.listdir('../databases')
+    if os.path.isdir(os.path.join('../databases', d))
+])
+    for db_name in databases:
+        path = os.path.join("../databases", db_name)
+        tables_names = sorted(os.listdir(path))
         
-        for row in df.itertuples():
-            embedding_value = [value for value in row[2:]]
-            embedding_column = [column for column in columns[1:]]
-
-            new_row = ""
-            for i, (column, value) in enumerate(zip(embedding_column, embedding_value)):
-                new_row += f"{column}: {value}, "
+        for table_name in tables_names:
+            name = table_name.split(".")[0]
+            df = pd.read_csv(os.path.join(path, table_name))
+            columns = df.columns.to_list()
             
-            pre_embeddings_rows.append(f"{name}, {new_row[:len(new_row)-2]}")
+            for row in df.itertuples():
+                embedding_value = [value for value in row[2:]]
+                embedding_column = [column for column in columns[1:]]
 
-    return pre_embeddings_rows
+                new_row = ""
+                for i, (column, value) in enumerate(zip(embedding_column, embedding_value)):
+                    new_row += f"{column}: {value}, "
+                
+                pre_embeddings_rows.append(f"{name}, {new_row[:len(new_row)-2]}")
+
+    milvusdb.add_texts(pre_embeddings_rows)
 
 def format_embeddings(pre_embeddings_rows: list[str]) -> dict:
     """
@@ -75,3 +85,10 @@ def format_embeddings(pre_embeddings_rows: list[str]) -> dict:
             result[db_name] = db 
 
     return result
+
+if __name__ == '__main__':
+
+    print('aaa')
+    milvusdb = MilvusDB()
+    results = milvusdb.search('Please list all the superpowers of 3-D Man.', threshold=0.4)
+    print(len(results))
