@@ -1,7 +1,6 @@
 import pandas as pd
 import os
 from milvusDB import MilvusDB
-import sys
 
 
 def create_embeddings():
