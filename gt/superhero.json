@@ -1,0 +1,194 @@
+[
+    {
+        "question_id": 718,
+        "db_id": "superhero",
+        "question": "How many superheroes have the super power of \"Super Strength\"?",
+        "evidence": "super power of \"Super Strength\" refers to power_name = 'Super Strength'",
+        "SQL": "SELECT COUNT(T1.hero_id) FROM hero_power AS T1 INNER JOIN superpower AS T2 ON T1.power_id = T2.id WHERE T2.power_name = 'Super Strength'",
+        "difficulty": "simple"
+    },
+    {
+        "question_id": 720,
+        "db_id": "superhero",
+        "question": "Please list the full names of all the superheroes with over 15 super powers.",
+        "evidence": "15 super powers refers to COUNT(full_name) > 15",
+        "SQL": "SELECT DISTINCT T1.full_name FROM superhero AS T1 INNER JOIN hero_power AS T2 ON T1.id = T2.hero_id GROUP BY T1.full_name HAVING COUNT(T2.power_id) > 15",
+        "difficulty": "simple"
+    },
+    {
+        "question_id": 721,
+        "db_id": "superhero",
+        "question": "How many superheroes have blue eyes?",
+        "evidence": "blue eyes refers to colour = 'Blue' and eye_colour_id = colour.id;",
+        "SQL": "SELECT COUNT(T1.id) FROM superhero AS T1 INNER JOIN colour AS T2 ON T1.eye_colour_id = T2.id WHERE T2.colour = 'Blue'",
+        "difficulty": "simple"
+    },
+    {
+        "question_id": 725,
+        "db_id": "superhero",
+        "question": "How many superheroes are published by Marvel Comics?",
+        "evidence": "published by Marvel Comics refers to publisher_name = 'Marvel Comics'",
+        "SQL": "SELECT COUNT(T1.id) FROM superhero AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.id WHERE T2.publisher_name = 'Marvel Comics'",
+        "difficulty": "simple"
+    },
+    {
+        "question_id": 727,
+        "db_id": "superhero",
+        "question": "Who is the publisher of Sauron?",
+        "evidence": "the publisher refers to publisher_name; Sauron refers to superhero_name = 'Sauron'",
+        "SQL": "SELECT T2.publisher_name FROM superhero AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.id WHERE T1.superhero_name = 'Sauron'",
+        "difficulty": "simple"
+    },
+    {
+        "question_id": 731,
+        "db_id": "superhero",
+        "question": "How many superheroes did DC Comics publish?",
+        "evidence": "superheroes that DC Comics published refers to publisher_name = 'DC Comics'",
+        "SQL": "SELECT COUNT(T1.id) FROM superhero AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.id WHERE T2.publisher_name = 'DC Comics'",
+        "difficulty": "simple"
+    },
+    {
+        "question_id": 732,
+        "db_id": "superhero",
+        "question": "Which publisher published the slowest superhero?",
+        "evidence": "the slowest superhero refers to attribute_name = 'Speed' where MIN(attribute_value); publisher refers to publisher_name",
+        "SQL": "SELECT T2.publisher_name FROM superhero AS T1 INNER JOIN publisher AS T2 ON T1.publisher_id = T2.id INNER JOIN hero_attribute AS T3 ON T1.id = T3.hero_id INNER JOIN attribute AS T4 ON T3.attribute_id = T4.id WHERE T4.attribute_name = 'Speed' ORDER BY T3.attribute_value LIMIT 1",
+        "difficulty": "moderate"
+    },
+    {
+        "question_id": 741,
+        "db_id": "superhero",
+        "question": "What is the name of the superhero that has the most powers?",
+        "evidence": "name of the superhero refers to superhero_name; superhero that has the most powers refers to MAX(COUNT(superhero_name))",
+        "SQL": "SELECT T1.superhero_name FROM superhero AS T1 INNER JOIN hero_power AS T2 ON T1.id = T2.hero_id GROUP BY T1.superhero_name ORDER BY COUNT(T2.hero_id) DESC LIMIT 1",
+        "difficulty": "simple"
+    },
+    {
+        "question_id": 745,
+        "db_id": "superhero",
+        "question": "Give the publisher ID of Star Trek.",
+        "evidence": "Star Trek is the publisher_name;",
+        "SQL": "SELECT id FROM publisher WHERE publisher_name = 'Star Trek'",
+        "difficulty": "simple"
+    },
+    {
+        "question_id": 746,
+        "db_id": "superhero",
+        "question": "Calculate the average attribute value of all superheroes.",
+        "evidence": "average attribute value of all superheroes refers to AVG(attribute_value)",
+        "SQL": "SELECT AVG(attribute_value) FROM hero_attribute",
+        "difficulty": "simple"
+    },
+    {
+        "question_id": 747,
+        "db_id": "superhero",
+        "question": "What is the total number of superheroes without full name?",
+        "evidence": "superheroes without full name refers to full_name IS NULL",
+        "SQL": "SELECT COUNT(id) FROM superhero WHERE full_name IS NULL",
+        "difficulty": "simple"
+    },
+    {
+        "question_id": 748,
+        "db_id": "superhero",
+        "question": "What is the eye colour of superhero with superhero ID 75?",
+        "evidence": "eye colour refers to colour where eye_colour_id = colour.id;",
+        "SQL": "SELECT T2.colour FROM superhero AS T1 INNER JOIN colour AS T2 ON T1.eye_colour_id = T2.id WHERE T1.id = 75",
+        "difficulty": "simple"
+    },
+    {
+        "question_id": 750,
+        "db_id": "superhero",
+        "question": "What is the average weight of all female superheroes?",
+        "evidence": "female refers to gender = 'Female'; average weight refers to AVG(weight_kg)",
+        "SQL": "SELECT AVG(T1.weight_kg) FROM superhero AS T1 INNER JOIN gender AS T2 ON T1.gender_id = T2.id WHERE T2.gender = 'Female'",
+        "difficulty": "simple"
+    },
+    {
+        "question_id": 790,
+        "db_id": "superhero",
+        "question": "Calculate the difference between Emil Blonsky's weight and Charles Chandler's weight.",
+        "evidence": "difference = SUBTRACT(SUM(weight_kg WHERE full_name = 'Emil Blonsky'), SUM(weight_kg WHERE full_name = 'Charles Chandler')); Emil Blonsky is the full name of superhero; Charles Chandler is the full name of superhero;",
+        "SQL": "SELECT ( SELECT weight_kg FROM superhero WHERE full_name LIKE 'Emil Blonsky' ) - ( SELECT weight_kg FROM superhero WHERE full_name LIKE 'Charles Chandler' ) AS CALCULATE",
+        "difficulty": "moderate"
+    },
+    {
+        "question_id": 791,
+        "db_id": "superhero",
+        "question": "Calculate the average height for each superhero.",
+        "evidence": "average = DIVIDE(SUM(height_cm), COUNT(all heros));",
+        "SQL": "SELECT CAST(SUM(height_cm) AS REAL) / COUNT(id) FROM superhero",
+        "difficulty": "simple"
+    },
+    {
+        "question_id": 802,
+        "db_id": "superhero",
+        "question": "Who is the tallest superhero?",
+        "evidence": "who refers to superhero_name; tallest superhero refers to MAX(height_cm);",
+        "SQL": "SELECT superhero_name FROM superhero ORDER BY height_cm DESC LIMIT 1",
+        "difficulty": "simple"
+    },
+    {
+        "question_id": 803,
+        "db_id": "superhero",
+        "question": "What is the power ID of cryokinesis?",
+        "evidence": "power ID refers to superpower.id; cryokinesis refers to power_name = 'cryokinesis';",
+        "SQL": "SELECT id FROM superpower WHERE power_name = 'Cryokinesis'",
+        "difficulty": "simple"
+    },
+    {
+        "question_id": 804,
+        "db_id": "superhero",
+        "question": "Provide the name of superhero with superhero ID 294.",
+        "evidence": "name of superhero refers to superhero_name; superhero ID 294 refers to superhero.id = 294;",
+        "SQL": "SELECT superhero_name FROM superhero WHERE id = 294",
+        "difficulty": "simple"
+    },
+    {
+        "question_id": 805,
+        "db_id": "superhero",
+        "question": "List the full names of superheroes with missing weight.",
+        "evidence": "missing weight refers to weight_kg = 0 OR weight_kg = NULL;",
+        "SQL": "SELECT DISTINCT full_name FROM superhero WHERE full_name IS NOT NULL AND (weight_kg IS NULL OR weight_kg = 0)",
+        "difficulty": "simple"
+    },
+    {
+        "question_id": 832,
+        "db_id": "superhero",
+        "question": "Name the tallest superhero.",
+        "evidence": "tallest superhero refers to MAX(height_cm);",
+        "SQL": "SELECT superhero_name FROM superhero ORDER BY height_cm DESC LIMIT 1",
+        "difficulty": "simple"
+    },
+    {
+        "question_id": 833,
+        "db_id": "superhero",
+        "question": "Name the superhero, otherwise known as Charles Chandler.",
+        "evidence": "name the superhero refers to superhero_name; Charles Chandler is the full name of superhero;",
+        "SQL": "SELECT superhero_name FROM superhero WHERE full_name = 'Charles Chandler'",
+        "difficulty": "simple"
+    },
+    {
+        "question_id": 836,
+        "db_id": "superhero",
+        "question": "What is the total number of superheroes that have John as their first name?",
+        "evidence": "have John as their first name refers to full_name LIKE 'John%';",
+        "SQL": "SELECT COUNT(id) FROM superhero WHERE full_name LIKE 'John%'",
+        "difficulty": "simple"
+    },
+    {
+        "question_id": 837,
+        "db_id": "superhero",
+        "question": "Give the hero ID of superhero with the lowest attribute value.",
+        "evidence": "lowest attribute value refers to MIN(attribute_value);",
+        "SQL": "SELECT hero_id FROM hero_attribute WHERE attribute_value = ( SELECT MIN(attribute_value) FROM hero_attribute )",
+        "difficulty": "simple"
+    },
+    {
+        "question_id": 838,
+        "db_id": "superhero",
+        "question": "Provide the full name of the superhero named Alien.",
+        "evidence": "",
+        "SQL": "SELECT full_name FROM superhero WHERE superhero_name = 'Alien'",
+        "difficulty": "simple"
+    }
+]
