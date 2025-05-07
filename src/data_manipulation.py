@@ -1,6 +1,7 @@
 import pandas as pd
 import os
 from milvusDB import MilvusDB
+import json
 
 
 def create_embeddings():
@@ -89,9 +90,34 @@ def format_embeddings(pre_embeddings_rows: list[str]) -> dict:
 
     return result
 
+def get_simple_query(json_path: str):
+    dev = json.load(open(json_path))
+
+    result = {}
+
+    for question in dev:
+        question_id = question["question_id"]
+        SQL:str = question["SQL"]
+        db_id = question["db_id"]
+
+        if "JOIN" not in SQL:
+            if db_id in result:
+                result[db_id].append(question_id)
+            else:
+                result[db_id] = [question_id]
+
+    return result
+
 if __name__ == '__main__':
 
-    print('aaa')
     milvusdb = MilvusDB()
-    results = milvusdb.search('Please list all the superpowers of 3-D Man.', threshold=0.4)
-    print(len(results))
+
+    query = "What is Copycat's race?"
+
+    with open("out.txt", "w") as file:
+        results = milvusdb.search(query, threshold=0.2)
+        for result in results:
+            file.write(f"{json.dumps(result)}\n")
+        print(len(results))
+
+    #print(get_simple_query("../databases/dev.json"))
