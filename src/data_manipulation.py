@@ -1,26 +1,33 @@
 import pandas as pd
 import os
+import sys
 from milvusDB import MilvusDB
 import json
+from embedder import Embedder
 
 
-def create_embeddings():
+def create_embeddings(embedder):
     """
     Extracts all rows from every table in every database, generates embeddings for the row data,
     and stores the resulting embeddings in a vector database (Milvus).
+
+    (Milvus collections have the same names as database folders)
     """
 
-    milvusdb = MilvusDB()
-    pre_embeddings_rows = []
 
     databases = sorted([
     d for d in os.listdir('../databases')
     if os.path.isdir(os.path.join('../databases', d))
 ])
+    # db_name is the name of milvus collection
     for db_name in databases:
+
+        milvusdb = MilvusDB(embedder, db_name)
+        pre_embeddings_rows = []
+
         path = os.path.join("../databases", db_name)
         tables_names = sorted(os.listdir(path))
-        
+        print(db_name)
         for table_name in tables_names:
             name = table_name.split(".")[0]
             df = pd.read_csv(os.path.join(path, table_name))
@@ -35,8 +42,8 @@ def create_embeddings():
                     new_row += f"{column}: {value}, "
                 
                 pre_embeddings_rows.append(f"{name}, {new_row[:len(new_row)-2]}")
+        milvusdb.add_texts(pre_embeddings_rows)
 
-    milvusdb.add_texts(pre_embeddings_rows)
 
 def format_embeddings(pre_embeddings_rows: list[str]) -> dict:
     """
@@ -110,7 +117,10 @@ def get_simple_query(json_path: str):
 
 if __name__ == '__main__':
 
-    milvusdb = MilvusDB()
+    embedder = Embedder()
+    create_embeddings(embedder)
+
+'''    milvusdb = MilvusDB()
 
     query = "What is Copycat's race?"
 
@@ -119,5 +129,5 @@ if __name__ == '__main__':
         for result in results:
             file.write(f"{json.dumps(result)}\n")
         print(len(results))
-
+'''
     #print(get_simple_query("../databases/dev.json"))
