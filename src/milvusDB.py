@@ -1,4 +1,5 @@
 from pymilvus import connections, FieldSchema, CollectionSchema, DataType, Collection, utility
+from ansi_colors import *
 
 class MilvusDB:
     def __init__(self, embedder, collection_name="TAG_search", host="localhost", port="19530"):
@@ -13,7 +14,9 @@ class MilvusDB:
         collections = utility.list_collections()
         if self.collection_name in collections:
             self.collection = Collection(self.collection_name)
+            print(f"{GREEN}Collection already exists{RESET}")
         else:
+            print(f"{CYAN}Creating collection...{RESET}")
             fields = [
                 FieldSchema(name="id", dtype=DataType.INT64, is_primary=True, auto_id=True),
                 FieldSchema(name="text", dtype=DataType.VARCHAR, max_length=2048),
