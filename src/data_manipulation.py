@@ -1,6 +1,6 @@
 import pandas as pd
 import os
-import sys
+import paths
 from milvusDB import MilvusDB
 import json
 from embedder import Embedder
@@ -16,8 +16,8 @@ def create_embeddings(embedder):
 
 
     databases = sorted([
-    d for d in os.listdir('../databases')
-    if os.path.isdir(os.path.join('../databases', d))
+    d for d in os.listdir(paths.DATABASES)
+    if os.path.isdir(os.path.join(paths.DATABASES, d))
 ])
     # db_name is the name of milvus collection
     for db_name in databases:
@@ -25,7 +25,7 @@ def create_embeddings(embedder):
         milvusdb = MilvusDB(embedder, db_name)
         pre_embeddings_rows = []
 
-        path = os.path.join("../databases", db_name)
+        path = os.path.join(paths.DATABASES, db_name)
         tables_names = sorted(os.listdir(path))
 
         for table_name in tables_names:
