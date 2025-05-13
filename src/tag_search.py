@@ -21,7 +21,7 @@ def get_llm_response(query: str, tables: str) -> str:
     system_prompt = """You are a highly capable language model that answers natural language questions using only the data provided in tabular format.
 
 You will be given:
-1. A natural language question.
+1. A natural language question (query).
 2. One or more tables in plain text. Each table starts with 'TABLE' followed by its name, then a header row with column names (comma-separated), and then multiple rows of data.
 
 Your task is to:
@@ -29,6 +29,7 @@ Your task is to:
 - Use only the data in the provided tables to answer.
 - Identify relevant tables and columns.
 - Apply operations such as filtering, counting, sorting, or aggregating as required to compute the correct answer.
+- If answering the question requires combining data from multiple tables, perform a join operation using shared identifiers or keys (e.g., matching rows by 'id').
 - Do not use any external knowledge or assumptions.
 - If the answer cannot be derived from the available data, respond with: "The answer cannot be determined from the provided data."
 - Keep your answer short, clear, and focused on what the user asked.
@@ -49,9 +50,12 @@ id,salary
 
 You must strictly base your reasoning only on the tables provided."""
 
-    content = f"""Query: {query}
+    content = f"""QUESTION:
+{query}
 
-{tables}"""
+TABLES:
+{tables}
+"""
 
 
     return query_groq(messages=[
