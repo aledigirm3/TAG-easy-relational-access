@@ -1,11 +1,9 @@
 from pymilvus import connections, FieldSchema, CollectionSchema, DataType, Collection, utility
-from embedder import Embedder
-import numpy as np
 
 class MilvusDB:
-    def __init__(self, collection_name="TAG_search", host="localhost", port="19530"):
+    def __init__(self, embedder, collection_name="TAG_search", host="localhost", port="19530"):
         self.collection_name = collection_name
-        self.model = Embedder()
+        self.model = embedder
         self.emb_dim = self.model.get_embedding_dimension()
 
         connections.connect("default", host=host, port=port)
