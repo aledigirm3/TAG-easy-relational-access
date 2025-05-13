@@ -27,7 +27,7 @@ def create_embeddings(embedder):
 
         path = os.path.join("../databases", db_name)
         tables_names = sorted(os.listdir(path))
-        print(db_name)
+
         for table_name in tables_names:
             name = table_name.split(".")[0]
             df = pd.read_csv(os.path.join(path, table_name))
@@ -45,7 +45,7 @@ def create_embeddings(embedder):
         milvusdb.add_texts(pre_embeddings_rows)
 
 
-def format_embeddings(pre_embeddings_rows: list[str]) -> dict:
+def entry_to_dict(pre_embeddings_rows: list[str]) -> dict:
     """
     Function that read the `pre_embeddings_rows` and return a dict that organize each db
     
@@ -97,6 +97,34 @@ def format_embeddings(pre_embeddings_rows: list[str]) -> dict:
 
     return result
 
+def prepare_table_prompt(entry_dict: dict) -> str:
+    """
+    Function that read the `format_embeddings` and return a prompt ready string
+    
+    Args:
+        dict: dictionary in this format:
+            {
+                "db_name": {
+                    "attributes": "",
+                    "rows" : []
+                }
+            } 
+        
+    Returns:
+        prompt ready string
+    """
+    output = ""
+    for db_name, content in entry_dict.items():
+        output += f"- TABLE: '{db_name}'\n\n"
+        output += content.get("attributes", "") + "\n\n"
+        
+        for row in content.get("rows", []):
+            output += row + "\n"
+        
+        output += "\n\n"
+
+    return output
+
 def get_simple_query(json_path: str):
     dev = json.load(open(json_path))
 
@@ -118,16 +146,4 @@ def get_simple_query(json_path: str):
 if __name__ == '__main__':
 
     embedder = Embedder()
-    create_embeddings(embedder)
-
-'''    milvusdb = MilvusDB()
-
-    query = "What is Copycat's race?"
-
-    with open("out.txt", "w") as file:
-        results = milvusdb.search(query, threshold=0.2)
-        for result in results:
-            file.write(f"{json.dumps(result)}\n")
-        print(len(results))
-'''
-    #print(get_simple_query("../databases/dev.json"))
+    #create_embeddings(embedder)
