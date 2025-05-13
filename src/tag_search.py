@@ -18,9 +18,40 @@ def get_llm_response(query: str, tables: str) -> str:
         str: relevant and augmented data for user.
     """
 
-    system_prompt = """"""
+    system_prompt = """You are a highly capable language model that answers natural language questions using only the data provided in tabular format.
 
-    content = f""""""
+You will be given:
+1. A natural language question.
+2. One or more tables in plain text. Each table starts with 'TABLE' followed by its name, then a header row with column names (comma-separated), and then multiple rows of data.
+
+Your task is to:
+- Analyze the user's question carefully.
+- Use only the data in the provided tables to answer.
+- Identify relevant tables and columns.
+- Apply operations such as filtering, counting, sorting, or aggregating as required to compute the correct answer.
+- Do not use any external knowledge or assumptions.
+- If the answer cannot be derived from the available data, respond with: "The answer cannot be determined from the provided data."
+- Keep your answer short, clear, and focused on what the user asked.
+
+Example format:
+
+TABLE 'employees'
+id,name,department
+1,Alice,Engineering
+2,Bob,Marketing
+3,Charlie,Engineering
+
+TABLE 'salaries'
+id,salary
+1,70000
+2,65000
+3,72000
+
+You must strictly base your reasoning only on the tables provided."""
+
+    content = f"""Query: {query}
+
+{tables}"""
 
 
     return query_groq(messages=[
@@ -55,7 +86,7 @@ if __name__ == '__main__':
                 query = item['question']
                 sql = item['SQL']
 
-    #========== Embeddings similarity phase ==========
+        #========== Embeddings similarity phase ==========
 
                 results = milvusdb.search(query, threshold=0.3)
                 res = []
@@ -65,14 +96,12 @@ if __name__ == '__main__':
 
                 dict_res = entry_to_dict(res)
                 prompt_tables = prepare_table_prompt(dict_res)
-                print(query)
-                print(prompt_tables)
 
-    #========== LLM generation phase =================
+        #========== LLM generation phase =================
 
-                #llmResponse = get_llm_response(query, prompt_tables)
+                llmResponse = get_llm_response(query, prompt_tables)
 
-    #=================================================
+        #=================================================
 
                 file.write(f"Qid: {q_id}\n")
                 file.write(f"DBid: {db_id}\n")
