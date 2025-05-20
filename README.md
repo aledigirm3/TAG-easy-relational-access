@@ -32,7 +32,7 @@ Navigate to the 'src' directory:
 # Example .env file
 API_KEY=your_groq_api_key_here
 ```
-### ⚠️ Important:
+#### ⚠️ Important:
 To successfully run the experiment, you must have access to Groq's Developer Tier, which supports pay-per-token usage. Lower tiers or trial access may not be sufficient.
 
 Now run these scripts (in order as shown)
