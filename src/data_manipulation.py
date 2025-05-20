@@ -146,4 +146,4 @@ def get_simple_query(json_path: str):
 if __name__ == '__main__':
 
     embedder = Embedder()
-    #create_embeddings(embedder)
+    create_embeddings(embedder)
