@@ -92,7 +92,7 @@ if __name__ == '__main__':
 
         #========== Embeddings similarity phase ==========
 
-                results = milvusdb.search(query, threshold=0.3)
+                results = milvusdb.search(query, threshold=0.4)
                 res = []
 
                 for result in results:
@@ -111,8 +111,10 @@ if __name__ == '__main__':
                 file.write(f"DBid: {db_id}\n")
                 file.write(f"QUESTION: {query}\n")
                 file.write(f"SQL: {sql}\n")
+                file.write(f"llmResponse: {llmResponse}\n")
                 file.write(f"TP=\n")
                 file.write(f"FP=\n")
                 file.write(f"FN=\n")
                 file.write(f"uScore(1-5)=\n")
+                file.write(f"\n\n")
                 file.flush()
