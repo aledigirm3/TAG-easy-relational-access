@@ -30,7 +30,7 @@ Navigate to the 'src' directory:
  Before executing the scripts, you must create a .env file in the root directory of the project. Use the structure provided in the .env.example file, replacing 'API_KEY' with your personal key obtained from Groq.
 ```env
 # Example .env file
-API_KEY=your_groq_api_key_here
+GROQ_API_KEY=your_groq_api_key_here
 ```
 #### ⚠️ Important:
 To successfully run the experiment, you must have access to Groq's Developer Tier, which supports pay-per-token usage. Lower tiers or trial access may not be sufficient.
