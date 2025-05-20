@@ -1,0 +1,25 @@
+{
+  "without_join": {
+    "instances": 39,
+    "precision": 0.83,
+    "recall": 0.71,
+    "F1-score": 0.765,
+    "uScore": 3.7
+  },
+
+  "with_join": {
+    "instances": 14,
+    "precision": 0.88,
+    "recall": 0.22,
+    "F1-score": 0.352,
+    "uScore": 2.57
+  },
+
+  "overall": {
+    "instances": 53,
+    "precision": 0.84,
+    "recall": 0.58,
+    "F1-score": 0.655,
+    "uScore": 3.4
+  }
+}
