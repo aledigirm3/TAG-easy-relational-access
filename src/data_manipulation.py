@@ -4,6 +4,11 @@ import paths
 from milvusDB import MilvusDB
 import json
 from embedder import Embedder
+import sys
+import os
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from databases.table_schemas import schemas
 
 
 def create_embeddings(embedder):
@@ -47,15 +52,15 @@ def create_embeddings(embedder):
 
 def entry_to_dict(pre_embeddings_rows: list[str]) -> dict:
     """
-    Function that read the `pre_embeddings_rows` and return a dict that organize each db
+    Function that read the `pre_embeddings_rows` and return a dict that organize each table
     
     Args:
-        pre_embeddings_rows (list): list where each element is formatted like this: `db_name`, `column1: value1`, `column2: value2`, .... 
+        pre_embeddings_rows (list): list where each element is formatted like this: `table`, `column1: value1`, `column2: value2`, .... 
         
     Returns:
         dict: dictionary in this format:
             {
-                "db_name": {
+                "table_name": {
                     "attributes": "",
                     "rows" : []
                 }
@@ -104,7 +109,7 @@ def prepare_table_prompt(entry_dict: dict) -> str:
     Args:
         dict: dictionary in this format:
             {
-                "db_name": {
+                "table_name": {
                     "attributes": "",
                     "rows" : []
                 }
@@ -115,13 +120,14 @@ def prepare_table_prompt(entry_dict: dict) -> str:
     """
     output = ""
     for db_name, content in entry_dict.items():
-        output += f"- TABLE: '{db_name}'\n\n"
-        output += content.get("attributes", "") + "\n\n"
+        output += f"- TABLE: '{db_name}'\n"
+        output += content.get("attributes", "") + "\n"
         
         for row in content.get("rows", []):
             output += row + "\n"
         
-        output += "\n\n"
+        output += "\n" + schemas[db_name] + "\n"
+        output += "\n"
 
     return output
 
