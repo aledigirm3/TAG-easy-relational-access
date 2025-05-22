@@ -22,31 +22,35 @@ def get_llm_response(query: str, tables: str) -> str:
 
 You will be given:
 1. A natural language question (query).
-2. One or more tables in plain text. Each table starts with 'TABLE' followed by its name, then a header row with column names (comma-separated), and then multiple rows of data.
+2. One or more tables in plain text. Each table starts with 'TABLE' followed by its name, then a header row with column names (comma-separated), then multiple rows of data, and ends with a single-line SQL 'CREATE TABLE' statement defining that table.
 
 Your task is to:
 - Analyze the user's question carefully.
 - Use only the data in the provided tables to answer.
 - Identify relevant tables and columns.
 - Apply operations such as filtering, counting, sorting, or aggregating as required to compute the correct answer.
-- If answering the question requires combining data from multiple tables, perform a join operation using shared identifiers or keys (e.g., matching rows by 'id').
+- If answering the question requires combining data from multiple tables, perform a join operation using shared identifiers or keys (e.g., matching rows by 'id'). You can also use the information from the 'CREATE TABLE' statements to understand table relationships and foreign keys to guide the join conditions.
 - Do not use any external knowledge or assumptions.
 - If the answer cannot be derived from the available data, respond with: "The answer cannot be determined from the provided data."
 - Keep your answer short, clear, and focused on what the user asked.
 
 Example format:
 
-TABLE 'employees'
+- TABLE 'employees'
 id,name,department
 1,Alice,Engineering
 2,Bob,Marketing
 3,Charlie,Engineering
 
-TABLE 'salaries'
-id,salary
-1,70000
-2,65000
-3,72000
+"CREATE TABLE 'employees' ( id INTEGER primary key, name TEXT, department TEXT )"
+
+- TABLE 'salaries'
+id,employee_id,salary
+1,1,70000
+2,2,65000
+3,3,72000
+
+"CREATE TABLE 'salaries' ( id INTEGER primary key, employee_id INTEGER, salary INTEGER, foreign key (employee_id) references employees(id) )"
 
 You must strictly base your reasoning only on the tables provided."""
 
