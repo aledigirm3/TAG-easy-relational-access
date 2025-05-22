@@ -96,7 +96,7 @@ if __name__ == '__main__':
 
         #========== Embeddings similarity phase ==========
 
-                results = milvusdb.search(query, threshold=0.4)
+                results = milvusdb.search(query)
                 res = []
 
                 for result in results:
