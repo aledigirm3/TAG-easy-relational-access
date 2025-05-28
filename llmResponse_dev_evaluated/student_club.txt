@@ -2170,10 +2170,10 @@ Therefore, the number of majors under the specified department and college is 19
 The number of majors under the department of "School of Applied Sciences, Technology and Education" in the College of Agriculture and Applied Sciences is 19.
 
 **Answer:** 19
-TP=19
+TP=1
 FP=0
-FN=2
-uScore(1-5)=4
+FN=0
+uScore(1-5)=5
 
 
 Qid: 1434
@@ -3109,7 +3109,7 @@ Looking through the 'expense' table:
 TP=1
 FP=0
 FN=0
-uScore(1-5)=3.5
+uScore(1-5)=3
 
 
 Qid: 1445
