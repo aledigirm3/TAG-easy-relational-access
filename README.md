@@ -57,3 +57,4 @@ The second script performs:
 ## Evaluation
 
 The evaluation of the system is conducted manually. As such, the responses saved include fields for various performance metrics, including the uScore, which represents a general human-assigned quality score of the LLM’s response.
+to see the performance of each individual database run the 'eval.py' script in the 'llmResponse_dev_evaluated' folder.
